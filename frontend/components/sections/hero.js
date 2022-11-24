@@ -1,7 +1,7 @@
-import Markdown from "react-markdown"
-import { getButtonAppearance } from "utils/button"
-import ButtonLink from "../elements/button-link"
-import NextImage from "../elements/image"
+import Markdown from "react-markdown";
+import { getButtonAppearance } from "utils/button";
+import ButtonLink from "../elements/button-link";
+import NextImage from "../elements/image";
 
 const Hero = ({ data }) => {
   return (
@@ -34,7 +34,7 @@ const Hero = ({ data }) => {
         <NextImage media={data.picture} />
       </div>
     </main>
-  )
-}
+  );
+};
 
-export default Hero
+export default Hero;

@@ -1,9 +1,9 @@
-import qs from "qs"
+import qs from "qs";
 
 export function getStrapiURL(path) {
   return `${
     process.env.NEXT_PUBLIC_STRAPI_API_URL || "http://localhost:1337"
-  }${path}`
+  }${path}`;
 }
 
 /**
@@ -20,24 +20,24 @@ export async function fetchAPI(path, urlParamsObject = {}, options = {}) {
       "Content-Type": "application/json",
     },
     ...options,
-  }
+  };
 
   // Build request URL
-  const queryString = qs.stringify(urlParamsObject)
+  const queryString = qs.stringify(urlParamsObject);
   const requestUrl = `${getStrapiURL(
     `/api${path}${queryString ? `?${queryString}` : ""}`
-  )}`
+  )}`;
 
   // Trigger API call
-  const response = await fetch(requestUrl, mergedOptions)
+  const response = await fetch(requestUrl, mergedOptions);
 
   // Handle response
   if (!response.ok) {
-    console.error(response.statusText)
-    throw new Error(`An error occured please try again`)
+    console.error(response.statusText);
+    throw new Error(`An error occured please try again`);
   }
-  const data = await response.json()
-  return data
+  const data = await response.json();
+  return data;
 }
 
 /**
@@ -49,7 +49,7 @@ export async function fetchAPI(path, urlParamsObject = {}, options = {}) {
  */
 export async function getPageData({ slug, locale, preview }) {
   // Find the pages that match this slug
-  const gqlEndpoint = getStrapiURL("/graphql")
+  const gqlEndpoint = getStrapiURL("/graphql");
   const pagesRes = await fetch(gqlEndpoint, {
     method: "POST",
     headers: {
@@ -71,7 +71,7 @@ export async function getPageData({ slug, locale, preview }) {
           }
         }
         query GetPages(
-          $slug: String!
+          $slug: String
           $publicationState: PublicationState!
           $locale: I18NLocaleCode!
         ) {        
@@ -239,26 +239,26 @@ export async function getPageData({ slug, locale, preview }) {
         }      
       `,
       variables: {
-        slug,
+        slug: slug === "" ? null : slug,
         publicationState: preview ? "PREVIEW" : "LIVE",
         locale,
       },
     }),
-  })
+  });
 
-  const pagesData = await pagesRes.json()
+  const pagesData = await pagesRes.json();
   // Make sure we found something, otherwise return null
   if (pagesData.data?.pages == null || pagesData.data.pages.length === 0) {
-    return null
+    return null;
   }
 
   // Return the first item since there should only be one result per slug
-  return pagesData.data.pages.data[0]
+  return pagesData.data.pages.data[0];
 }
 
 // Get site data from Strapi (metadata, navbar, footer...)
 export async function getGlobalData(locale) {
-  const gqlEndpoint = getStrapiURL("/graphql")
+  const gqlEndpoint = getStrapiURL("/graphql");
   const globalRes = await fetch(gqlEndpoint, {
     method: "POST",
     headers: {
@@ -344,8 +344,8 @@ export async function getGlobalData(locale) {
         locale,
       },
     }),
-  })
+  });
 
-  const global = await globalRes.json()
-  return global.data.global
+  const global = await globalRes.json();
+  return global.data.global;
 }
